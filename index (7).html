@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tensir — Compounding quantum simulations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── OXIDE DESIGN SYSTEM, ADAPTED FOR TENSIR ── */
+:root {
+  --font-sans: 'Instrument Sans', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  --font-mono: 'DM Mono', 'GT America Mono', ui-monospace, monospace;
+  --spacing: .25rem;
+
+  /* Oxide neutral scale */
+  --color-neutral-0:    oklch(16.2% .01 260);
+  --color-neutral-50:   oklch(19.5% .009 260);
+  --color-neutral-100:  oklch(21.6% .008 260);
+  --color-neutral-200:  oklch(24.7% .007 260);
+  --color-neutral-300:  oklch(31.6% .006 260);
+  --color-neutral-400:  oklch(38.9% .005 260);
+  --color-neutral-500:  oklch(48.3% .0041 260);
+  --color-neutral-600:  oklch(60.6% .0031 260);
+  --color-neutral-700:  oklch(71.7% .0021 260);
+  --color-neutral-800:  oklch(79% .0011 260);
+  --color-neutral-900:  oklch(90% .0001 260);
+
+  /* Amber accent — warmer, darker, slightly red-shifted */
+  --color-amber-200: oklch(20% .005 260);
+  --color-amber-300: oklch(26% .005 260);
+  --color-amber-400: oklch(33% .005 260);
+  --color-amber-500: oklch(45% .005 260);
+  --color-amber-600: oklch(57% .005 260);
+  --color-amber-700: oklch(68% .005 260);
+  --color-amber-800: oklch(78% .005 260);
+  --color-amber-900: oklch(92% .005 260);
+
+  /* Semantic surfaces */
+  --surface-default:   var(--color-neutral-0);
+  --surface-raise:     var(--color-neutral-50);
+  --surface-secondary: var(--color-neutral-100);
+  --surface-hover:     var(--color-neutral-200);
+  --surface-tertiary:  var(--color-neutral-300);
+
+  /* Semantic content */
+  --content-raise:     var(--color-neutral-900);
+  --content-default:   var(--color-neutral-800);
+  --content-secondary: var(--color-neutral-700);
+  --content-tertiary:  var(--color-neutral-600);
+  --content-quaternary:var(--color-neutral-500);
+
+  /* Semantic strokes */
+  --stroke-default:   var(--color-neutral-300);
+  --stroke-raise:     var(--color-neutral-400);
+  --stroke-secondary: var(--color-neutral-200);
+  --stroke-tertiary:  var(--color-neutral-100);
+
+  /* Accent amber */
+  --surface-accent:          var(--color-amber-200);
+  --surface-accent-hover:    var(--color-amber-300);
+  --surface-accent-inverse:  var(--color-amber-800);
+  --content-accent:          var(--color-amber-800);
+  --content-accent-secondary:var(--color-amber-700);
+  --stroke-accent:           var(--color-amber-800);
+  --stroke-accent-secondary: var(--color-amber-600);
+
+  /* Layout */
+  --header-height: 3.75rem;
+  --container-gap: 1rem;
+  --gutter-width:  1.2rem;
+
+  /* Radius — Oxide sharp */
+  --radius-sm: .0625rem;
+  --radius-md: .125rem;
+  --radius-lg: .25rem;
+}
+
+@media (min-width: 600px)  { :root { --gutter-width: 2.5rem; } }
+@media (min-width: 1000px) { :root { --container-gap: 1.25rem; } }
+
+/* ── RESET ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  border: 0 solid var(--stroke-default);
+  margin: 0; padding: 0;
+}
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--surface-default);
+  color: var(--content-default);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.375rem;
+  letter-spacing: .0175rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── OXIDE TYPE SCALE ── */
+.heading-display {
+  font-family: var(--font-sans);
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 2.625rem;
+  letter-spacing: .005rem;
+  color: var(--content-raise);
+}
+@media (min-width: 800px) {
+  .heading-display { font-size: 3.25rem; line-height: 3.625rem; letter-spacing: -.01rem; }
+}
+@media (min-width: 1000px) {
+  .heading-display { font-size: 4.0625rem; line-height: 90%; letter-spacing: -.02rem; }
+}
+
+.heading-xl {
+  font-family: var(--font-sans);
+  font-size: 1.5625rem;
+  font-weight: 400;
+  line-height: 2rem;
+  letter-spacing: .015rem;
+  color: var(--content-raise);
+}
+@media (min-width: 600px) {
+  .heading-xl { font-size: 2.25rem; line-height: 2.625rem; letter-spacing: .005rem; }
+}
+@media (min-width: 1000px) {
+  .heading-xl { font-size: 3.25rem; line-height: 3.625rem; letter-spacing: -.01rem; }
+}
+
+.text-sans-2xl {
+  font-family: var(--font-sans);
+  font-size: 1.5625rem;
+  font-weight: 400;
+  line-height: 2rem;
+  letter-spacing: .015rem;
+}
+.text-sans-xl {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+  letter-spacing: .0125rem;
+}
+.text-sans-lg {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.375rem;
+  letter-spacing: .0175rem;
+}
+.text-sans-md {
+  font-family: var(--font-sans);
+  font-size: .875rem;
+  font-weight: 400;
+  line-height: 1.125rem;
+  letter-spacing: .03rem;
+}
+
+/* Oxide mono — always uppercase */
+.text-mono-xs {
+  font-family: var(--font-mono);
+  font-size: .6875rem;
+  font-weight: 400;
+  line-height: 1rem;
+  letter-spacing: .04rem;
+  text-transform: uppercase;
+}
+.text-mono-sm {
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 1rem;
+  letter-spacing: .04rem;
+  text-transform: uppercase;
+}
+
+/* ── LAYOUT ── */
+.wide-layout {
+  max-width: 80rem;
+  margin-inline: auto;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--gutter-width);
+  border-bottom: 1px solid var(--stroke-secondary);
+  background: oklch(16.2% .01 260 / 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.nav-logo {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--content-raise);
+  text-decoration: none;
+  letter-spacing: .0175rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--content-secondary);
+  text-decoration: none;
+  transition: color .15s;
+}
+.nav-links a:hover { color: var(--content-raise); }
+
+.nav-pip {
+  color: var(--content-accent);
+  background: var(--surface-accent);
+  border: 1px solid var(--stroke-accent-secondary);
+  padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: background .15s;
+}
+.nav-pip:hover { background: var(--surface-accent-hover); color: var(--content-accent); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-inline: var(--gutter-width);
+  padding-bottom: calc(var(--spacing) * 20);
+  padding-top: var(--header-height);
+  position: relative;
+  overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute;
+  top: -5%; right: -5%;
+  width: 50vw; height: 50vw;
+  background: radial-gradient(ellipse, oklch(30% .005 260 / 0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  color: var(--content-accent);
+  margin-bottom: calc(var(--spacing) * 6);
+  opacity: 0;
+  animation: fadeUp .7s ease forwards .1s;
+}
+.hero-title {
+  margin-bottom: calc(var(--spacing) * 4);
+  opacity: 0;
+  animation: fadeUp .8s ease forwards .25s;
+}
+.hero-subtitle {
+  color: var(--content-secondary);
+  max-width: 42rem;
+  opacity: 0;
+  animation: fadeUp .8s ease forwards .45s;
+}
+.hero-mark {
+  position: absolute;
+  top: 18%;
+  right: 8%;
+  width: min(38vw, 380px);
+  height: auto;
+  color: var(--color-neutral-400);
+  opacity: 0;
+  animation: fadeUp 1s ease forwards .6s;
+  pointer-events: none;
+}
+.hero-scroll {
+  position: absolute;
+  bottom: calc(var(--spacing) * 8);
+  left: var(--gutter-width);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
+  color: var(--content-quaternary);
+  opacity: 0;
+  animation: fadeUp .7s ease forwards 1s;
+}
+.hero-scroll-line { width: 2rem; height: 1px; background: var(--content-quaternary); }
+
+/* ── SECTION WRAP ── */
+.section-wrap {
+  padding-inline: var(--gutter-width);
+  border-top: 1px solid var(--stroke-secondary);
+  padding-top: calc(var(--spacing) * 20);
+  padding-bottom: calc(var(--spacing) * 20);
+}
+.section-wrap.raised { background: var(--surface-raise); }
+
+/* ── SECTION LABEL ── */
+.section-label {
+  color: var(--content-accent);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 4);
+  margin-bottom: calc(var(--spacing) * 10);
+}
+.section-label::before {
+  content: '';
+  display: block;
+  width: calc(var(--spacing) * 8);
+  height: 1px;
+  background: var(--stroke-accent-secondary);
+}
+
+/* ── NOT LIST ── */
+.not-list {
+  margin-top: calc(var(--spacing) * 10);
+  border-top: 1px solid var(--stroke-secondary);
+}
+.not-item {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--spacing) * 4);
+  padding-block: calc(var(--spacing) * 5);
+  border-bottom: 1px solid var(--stroke-secondary);
+}
+.not-symbol { color: var(--content-quaternary); flex-shrink: 0; width: 1rem; }
+.not-text   { flex: 1; color: var(--content-secondary); }
+.not-credit { color: var(--content-accent); flex-shrink: 0; }
+
+/* ── TARGET ── */
+.target-pullquote {
+  border-left: 2px solid var(--stroke-accent);
+  padding-left: calc(var(--spacing) * 8);
+  margin-top: calc(var(--spacing) * 12);
+  margin-bottom: calc(var(--spacing) * 12);
+}
+.target-pullquote p {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  letter-spacing: .0125rem;
+  color: var(--content-raise);
+  font-style: italic;
+}
+
+.element-tags { display: flex; flex-wrap: wrap; gap: calc(var(--spacing) * 2); }
+.element-tag {
+  padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3);
+  border: 1px solid var(--stroke-secondary);
+  border-radius: var(--radius-md);
+  background: var(--surface-raise);
+  color: var(--content-secondary);
+}
+.element-tag.accent {
+  border-color: var(--stroke-accent-secondary);
+  background: var(--surface-accent);
+  color: var(--content-accent);
+}
+
+/* ── INDUSTRIES ── */
+.industries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  border-top: 1px solid var(--stroke-secondary);
+  border-left: 1px solid var(--stroke-secondary);
+  margin-top: calc(var(--spacing) * 10);
+}
+.industry-item {
+  padding: calc(var(--spacing) * 8);
+  border-right: 1px solid var(--stroke-secondary);
+  border-bottom: 1px solid var(--stroke-secondary);
+  transition: background .15s;
+}
+.industry-item:hover { background: var(--surface-raise); }
+.industry-number { color: var(--content-accent); margin-bottom: calc(var(--spacing) * 3); }
+.industry-name   { color: var(--content-raise); margin-bottom: calc(var(--spacing) * 2); }
+.industry-sub    { color: var(--content-tertiary); }
+.industries-footnote { margin-top: calc(var(--spacing) * 8); color: var(--content-tertiary); }
+.industries-footnote em { font-style: normal; color: var(--content-accent); }
+
+/* ── HPC ── */
+.methods-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--stroke-secondary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: calc(var(--spacing) * 10);
+}
+@media (max-width: 700px) { .methods-row { grid-template-columns: 1fr; } }
+
+.method-cell { padding: calc(var(--spacing) * 8); border-right: 1px solid var(--stroke-secondary); }
+.method-cell:last-child { border-right: none; }
+@media (max-width: 700px) {
+  .method-cell { border-right: none; border-bottom: 1px solid var(--stroke-secondary); }
+  .method-cell:last-child { border-bottom: none; }
+}
+.method-name { color: var(--content-accent); margin-bottom: calc(var(--spacing) * 3); }
+.method-desc { color: var(--content-secondary); }
+
+.verdict-box {
+  margin-top: calc(var(--spacing) * 8);
+  padding: calc(var(--spacing) * 8);
+  border: 1px solid var(--stroke-secondary);
+  border-radius: var(--radius-md);
+  background: var(--surface-secondary);
+  color: var(--content-secondary);
+}
+.verdict-box strong { color: var(--content-raise); font-weight: 500; }
+
+/* ── ALGO CARDS ── */
+.algo-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--spacing) * 6);
+  margin-top: calc(var(--spacing) * 10);
+}
+@media (max-width: 700px) { .algo-pair { grid-template-columns: 1fr; } }
+
+.algo-card {
+  padding: calc(var(--spacing) * 8);
+  border: 1px solid var(--stroke-secondary);
+  border-radius: var(--radius-md);
+  background: var(--surface-raise);
+  position: relative;
+}
+.algo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--content-accent), transparent);
+}
+.algo-abbr { color: var(--content-accent); margin-bottom: calc(var(--spacing) * 2); }
+.algo-name { color: var(--content-raise); margin-bottom: calc(var(--spacing) * 4); }
+.algo-desc { color: var(--content-secondary); }
+
+.problem-box {
+  margin-top: calc(var(--spacing) * 8);
+  padding: calc(var(--spacing) * 8) calc(var(--spacing) * 10);
+  border: 1px solid var(--stroke-accent-secondary);
+  background: var(--surface-accent);
+  border-radius: var(--radius-md);
+  color: var(--content-secondary);
+}
+.problem-box strong { color: var(--content-accent); font-weight: 500; }
+
+/* ── TENSIR FEATURES ── */
+.features-list {
+  margin-top: calc(var(--spacing) * 10);
+  border-top: 1px solid var(--stroke-secondary);
+}
+.feature-row {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  gap: calc(var(--spacing) * 8);
+  padding-block: calc(var(--spacing) * 7);
+  border-bottom: 1px solid var(--stroke-secondary);
+  align-items: start;
+}
+@media (max-width: 700px) {
+  .feature-row { grid-template-columns: 1fr; gap: calc(var(--spacing) * 2); }
+}
+.feature-label { color: var(--content-quaternary); padding-top: .1rem; }
+.feature-text  { color: var(--content-secondary); }
+.feature-text strong { color: var(--content-raise); font-weight: 500; }
+
+/* ── COMPOUND ── */
+.compound-box {
+  margin-top: calc(var(--spacing) * 10);
+  padding: calc(var(--spacing) * 10);
+  border: 1px solid var(--stroke-secondary);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--spacing) * 10);
+}
+@media (max-width: 700px) { .compound-box { flex-direction: column; } }
+.compound-text {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  letter-spacing: .0125rem;
+  color: var(--content-raise);
+  max-width: 52ch;
+}
+.compound-mark {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 4rem;
+  font-weight: 300;
+  color: var(--content-accent);
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+/* ── INSTALL ── */
+#install {
+  border-top: 1px solid var(--stroke-secondary);
+  padding: calc(var(--spacing) * 10) var(--gutter-width);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--spacing) * 8);
+  flex-wrap: wrap;
+}
+.install-label { color: var(--content-quaternary); margin-bottom: calc(var(--spacing) * 2); }
+.install-cmd {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: .02em;
+  color: var(--content-accent);
+  text-transform: none;
+}
+.install-cmd span { color: var(--content-quaternary); }
+.install-links { display: flex; gap: calc(var(--spacing) * 8); }
+.install-link {
+  color: var(--content-secondary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1);
+  transition: color .15s;
+}
+.install-link:hover { color: var(--content-accent); }
+.install-link::after { content: '↗'; opacity: .6; }
+
+/* ── ESSAY ── */
+#essay {
+  border-top: 1px solid var(--stroke-secondary);
+  background: var(--surface-raise);
+  padding: calc(var(--spacing) * 12) var(--gutter-width);
+}
+.essay-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--spacing) * 12);
+  flex-wrap: wrap;
+  max-width: 80rem;
+  margin-inline: auto;
+}
+.essay-title {
+  color: var(--content-raise);
+  margin-bottom: calc(var(--spacing) * 3);
+  font-style: italic;
+}
+.essay-desc { color: var(--content-secondary); max-width: 52ch; }
+.essay-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
+  color: var(--content-accent);
+  border: 1px solid var(--stroke-accent-secondary);
+  padding: calc(var(--spacing) * 3) calc(var(--spacing) * 6);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  background: var(--surface-accent);
+  transition: background .15s;
+}
+.essay-btn:hover { background: var(--surface-accent-hover); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--stroke-secondary);
+  padding: calc(var(--spacing) * 8) var(--gutter-width);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: calc(var(--spacing) * 4);
+}
+.footer-logo { color: var(--content-tertiary); text-decoration: none; }
+.footer-links { display: flex; gap: calc(var(--spacing) * 6); list-style: none; flex-wrap: wrap; }
+.footer-links a { color: var(--content-quaternary); text-decoration: none; transition: color .15s; }
+.footer-links a:hover { color: var(--content-secondary); }
+.footer-copy { color: var(--content-quaternary); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .65s ease, transform .65s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* body spacing util */
+.mt-8  { margin-top: calc(var(--spacing) * 8); }
+.mt-4  { margin-top: calc(var(--spacing) * 4); }
+.max-prose { max-width: 64ch; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Tensir</a>
+  <ul class="nav-links">
+    <li><a href="#" class="text-mono-xs">Technology</a></li>
+    <li><a href="#" class="text-mono-xs">Resources</a></li>
+    <li><a href="#" class="text-mono-xs">About</a></li>
+    <li><a href="#" class="nav-pip text-mono-xs">Log in</a></li>
+    <li><a href="#" class="nav-pip text-mono-xs" style="background:var(--surface-accent-inverse);color:var(--color-neutral-0);border-color:transparent;">Sign up</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <svg class="hero-mark" viewBox="110 90 295 295" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="245" cy="255" r="64" fill="none" stroke="currentColor" stroke-width="10"/>
+    <line x1="183.2" y1="271.6" x2="139.7" y2="282.9" stroke="currentColor" stroke-width="10" stroke-linecap="butt"/>
+    <line x1="228.4" y1="316.8" x2="217.1" y2="359.5" stroke="currentColor" stroke-width="10" stroke-linecap="butt"/>
+    <line x1="290.3" y1="209.7" x2="383.3" y2="116.7" stroke="currentColor" stroke-width="10" stroke-linecap="butt"/>
+    <path d="M 268.8,343.7 A 91.8,91.8 0 0,0 336.5,263" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="139.7" cy="282.9" r="9" fill="currentColor"/>
+    <circle cx="217.1" cy="359.5" r="9" fill="currentColor"/>
+    <circle cx="383.3" cy="116.7" r="9" fill="currentColor"/>
+    <circle cx="214" cy="175" r="9" fill="currentColor"/>
+  </svg>
+  <div>
+    <p class="hero-eyebrow text-mono-sm">Quantum chemistry data infrastructure</p>
+    <h1 class="hero-title heading-display">Tensir.</h1>
+    <p class="hero-subtitle text-sans-xl">Compounding quantum simulations.</p>
+  </div>
+</section>
+
+<!-- NARROW TARGET -->
+<section class="section-wrap raised">
+  <div class="wide-layout">
+    <div class="target-pullquote reveal">
+      <p>"Transition metals, lanthanides, actinides. Our core area of interest."</p>
+    </div>
+    <div class="element-tags reveal">
+      <span class="element-tag text-mono-xs accent">Transition metals</span>
+      <span class="element-tag text-mono-xs accent">Lanthanides</span>
+      <span class="element-tag text-mono-xs accent">Actinides</span>
+      <span class="element-tag text-mono-xs">Correlated electron systems</span>
+      <span class="element-tag text-mono-xs">Partially filled d orbitals</span>
+      <span class="element-tag text-mono-xs">Partially filled f orbitals</span>
+      <span class="element-tag text-mono-xs">Multireference systems</span>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="section-wrap">
+  <div class="wide-layout">
+    <h2 class="heading-xl reveal">Industries we enhance.</h2>
+    <div class="industries-grid reveal">
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">01</p>
+        <p class="industry-name text-sans-xl">Semiconductors</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">02</p>
+        <p class="industry-name text-sans-xl">Energy Storage</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">03</p>
+        <p class="industry-name text-sans-xl">Petrochemistry</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">04</p>
+        <p class="industry-name text-sans-xl">Carbon Capture</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">05</p>
+        <p class="industry-name text-sans-xl">Hydrogen</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">06</p>
+        <p class="industry-name text-sans-xl">Agrochemistry</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">07</p>
+        <p class="industry-name text-sans-xl">Nuclear Fission & SMR</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">08</p>
+        <p class="industry-name text-sans-xl">Nuclear Fusion</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">09</p>
+        <p class="industry-name text-sans-xl">Permanent Magnets</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">10</p>
+        <p class="industry-name text-sans-xl">High-Tc Superconductors</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">11</p>
+        <p class="industry-name text-sans-xl">Aerospace</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">12</p>
+        <p class="industry-name text-sans-xl">Space Applications</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">13</p>
+        <p class="industry-name text-sans-xl">Pharma & Metallodrugs</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">14</p>
+        <p class="industry-name text-sans-xl">Asteroid Mining</p>
+      </div>
+      <div class="industry-item">
+        <p class="industry-number text-mono-xs">15</p>
+        <p class="industry-name text-sans-xl">Rare Earth Processing</p>
+      </div>
+    </div>
+    <p class="industries-footnote text-mono-xs reveal">Different industries. Same class of computationally demanding quantum chemistry problems. <em>One platform.</em></p>
+  </div>
+</section>
+
+<!-- TENSIR -->
+<section class="section-wrap raised">
+  <div class="wide-layout">
+    <p class="section-label text-mono-xs">The platform</p>
+    <h2 class="heading-xl reveal">Empirical data. Compounding insights.</h2>
+    <div class="features-list reveal">
+      <div class="feature-row">
+        <span class="feature-label text-mono-xs">Calibration snapshots</span>
+        <p class="feature-text text-sans-lg">Noise profiles captured at run time, indexed by backend and qubit topology. <strong>Superconducting drift and trapped ion drift, each modelled on its own terms.</strong></p>
+      </div>
+      <div class="feature-row">
+        <span class="feature-label text-mono-xs">Variational parameters</span>
+        <p class="feature-text text-sans-lg">Full optimizer trajectories — parameter vectors, cost evaluations, convergence curves. <strong>Every mapped landscape seeds the next experiment.</strong></p>
+      </div>
+      <div class="feature-row">
+        <span class="feature-label text-mono-xs">Hardware-agnostic</span>
+        <p class="feature-text text-sans-lg">IBM, Google, IonQ, Quantinuum, QuEra, Pasqal. <strong>Optimization history that travels as hardware improves.</strong></p>
+      </div>
+      <div class="feature-row">
+        <span class="feature-label text-mono-xs">Simulation records</span>
+        <p class="feature-text text-sans-lg">Molecular systems, active space configurations, energy results, fidelity scores. <strong>Quantum R&amp;D that accumulates in value over time.</strong></p>
+      </div>
+    </div>
+    <div class="compound-box reveal">
+      <p class="compound-text">Run 50 converges faster than run 1. Quantum R&amp;D becomes a compounding dataset.</p>
+      <span class="compound-mark">∑</span>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<div id="install">
+  <div>
+    <p class="install-label text-mono-xs">Get started</p>
+    <p class="install-cmd"><span>$ </span>pip install tensir</p>
+  </div>
+  <div class="install-links">
+    <a href="https://pypi.org/project/tensir" class="install-link text-mono-xs" target="_blank">PyPI</a>
+    <a href="https://github.com" class="install-link text-mono-xs" target="_blank">GitHub</a>
+    <a href="#" class="install-link text-mono-xs">Documentation</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo text-sans-lg">Tensir</a>
+  <ul class="footer-links">
+    <li><a href="#" class="text-mono-xs">Technology</a></li>
+    <li><a href="#" class="text-mono-xs">Resources</a></li>
+    <li><a href="#" class="text-mono-xs">About</a></li>
+    <li><a href="https://github.com" target="_blank" class="text-mono-xs">GitHub</a></li>
+    <li><a href="https://pypi.org/project/tensir" target="_blank" class="text-mono-xs">PyPI</a></li>
+  </ul>
+  <p class="footer-copy text-mono-xs">tensir.ai</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
