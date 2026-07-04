@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Tensir — Compounding simulations",
+  title: "Tensir",
   description: "The switchboard for chemistry R&D.",
 };
 
