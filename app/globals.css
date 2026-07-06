@@ -1,1 +1,35 @@
 @import "tailwindcss";
+
+html {
+  background-color: #0b0f13;
+}
+
+::selection {
+  background: #cb433a;
+  color: #0b0f13;
+}
+
+/* Right-column axis: the nav links' left edge. .right-axis pins the nav's
+   right group to this width; .right-axis-row pushes a row's content into a
+   column of the same width, so door labels line up under the nav links.
+   Both only engage at lg — below that, layouts fall back to their own flow. */
+:root {
+  --right-col: 600px;
+}
+
+@media (min-width: 1024px) {
+  .right-axis {
+    width: var(--right-col);
+    justify-content: space-between;
+  }
+
+  .right-axis-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--right-col);
+  }
+
+  .right-axis-row > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+}

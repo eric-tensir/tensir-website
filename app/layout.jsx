@@ -1,20 +1,30 @@
+import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+
+// Two-font system, both self-hosted via next/font:
+// Space Grotesk — display and body; geometric with ink-trap details.
+// IBM Plex Mono — data/code accents: labels, kickers, annotations.
+const display = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata = {
   title: "Tensir",
-  description: "The switchboard for chemistry R&D.",
+  description: "Compute logistics for chemistry R&D.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${display.variable} ${mono.variable}`}>
       <body>{children}</body>
     </html>
   );
