@@ -1,6 +1,6 @@
 "use client";
 
-import { Cta, useContact, MONO, DISPLAY } from "./site";
+import { MONO, DISPLAY } from "./site";
 
 export function PagePlaceholder({ title, note }) {
   return (
@@ -14,14 +14,6 @@ export function PagePlaceholder({ title, note }) {
       <p className="mt-8 text-sm text-white/45 max-w-xl" style={{ fontFamily: MONO }}>
         {note}
       </p>
-      <div className="mt-10">
-        <ContactCta />
-      </div>
     </section>
   );
-}
-
-function ContactCta() {
-  const openContact = useContact();
-  return <Cta onClick={openContact}>Contact us</Cta>;
 }

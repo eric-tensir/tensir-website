@@ -18,8 +18,7 @@ const t = {
   ],
   cashLabel: "cash vs. equity — what's your preference and why?",
   roleLabel: "define your own role. what would you do at tensir?",
-  whiteboardLabel:
-    "There is no structure here. Write anything you want about yourself — past, present, future, personal, professional, whatever.",
+  whiteboardLabel: "write anything you want about yourself. we read everything.",
   successHead: "[ received ]",
   successBody:
     "we read every whiteboard. if it resonates, you'll hear from eric directly.",
@@ -223,7 +222,7 @@ export function CareersContent() {
                 </button>
                 {status === "error" && (
                   <p className="text-xs text-[#CB433A]" style={{ fontFamily: MONO }}>
-                    something broke on our side — try again, or mail contact@tensir.ai
+                    something broke on our side — try again in a minute
                   </p>
                 )}
               </div>

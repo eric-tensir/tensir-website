@@ -13,13 +13,13 @@ const t = {
   hero: ["Compounding", "simulations"],
   sub: "Compute logistics for chemistry R&D",
   sectionTitle: "Core concepts of Tensir",
-  heads: ["Build pipelines", "Unify compute", "Forecast budget", "Trace provenance", "Speedup workflow"],
+  heads: ["Build pipelines", "Assemble compute", "Forecast budget", "Trace provenance", "Deploy workflows"],
   bodies: [
     "custom sequence to answer this : do we keep working on this compound or trash it ??",
-    "qpu gpu, ai models — cloud on prem (my take: sporadic forever). there you see the whole arena.",
-    "(personal opinion : the best) l'argent, le cash, la thune, le fric. chemistry compute is expensive, see exactly where it goes !",
+    "qpu, gpu, tpu — cloud, on prem, air gapped. one view of the whole arena.",
+    "money, cash, the burn. chemistry compute is expensive, see exactly where it goes !",
     "the biography, the records, the life story.",
-    "provide your teams with the best prod tools.",
+    null, // Deploy workflows — a sketch-language arrow renders instead of copy
   ],
   industries: ["Pharma", "Chemicals", "Energy", "Semiconductors", "Aerospace", "Nuclear", "Robotics"],
   quote: "“Some interesting things happen once fragments are able to stack.”",
@@ -35,6 +35,27 @@ const SKETCHES = [
   "/sketches/01_pipeline_v1_white_on_dark.png",
   "/sketches/05_hierarchy_v1_white_on_dark.png",
 ];
+
+// Hand-drawn-style arrow — same visual language as the sketches: thin soft-white
+// stroke, slight wobble. Points right, toward the hierarchy sketch.
+function SketchArrow() {
+  return (
+    <svg width="220" height="64" viewBox="0 0 220 64" fill="none" aria-hidden="true">
+      <path
+        d="M6 38 C 48 30, 96 27, 148 29 C 168 30, 188 31, 206 33"
+        stroke="#EDEDED"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M182 14 C 191 21, 199 27, 206 33 C 196 36, 186 42, 178 50"
+        stroke="#EDEDED"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 // ————— Expandable door band — smooth grid-rows height animation, no navigation —————
 function Door({ label, children }) {
@@ -161,9 +182,6 @@ function Landing() {
               {t.sub}
             </p>
           </div>
-          <div className="shrink-0 pb-2">
-            <Cta onClick={openContact}>Contact us</Cta>
-          </div>
         </div>
       </section>
 
@@ -176,15 +194,35 @@ function Landing() {
         </div>
         <div>
           {t.heads.map((head, i) => (
-            <div key={head} className="flex flex-col md:flex-row md:items-center border-b border-white/10 last:border-b-0">
+            <div
+              key={head}
+              className="relative flex flex-col md:flex-row md:items-center border-b border-white/10 last:border-b-0"
+            >
               <div className="flex-1 min-w-0 px-4 md:px-10 pt-8 md:py-12">
                 <span className="text-xs uppercase tracking-[0.2em] text-white/45" style={{ fontFamily: MONO }}>
                   {head}
                 </span>
-                <p className="mt-4 text-lg md:text-[1.375rem] font-medium leading-[1.45] tracking-tight text-white/90 max-w-2xl">
-                  {t.bodies[i]}
-                </p>
+                {t.bodies[i] ? (
+                  <p className="mt-4 text-lg md:text-[1.375rem] font-medium leading-[1.45] tracking-tight text-white/90 max-w-2xl">
+                    {t.bodies[i]}
+                  </p>
+                ) : (
+                  <div className="mt-6 flex md:justify-end md:pr-6">
+                    <SketchArrow />
+                  </div>
+                )}
               </div>
+              {/* "brilliant move" badge — sits in the gap between text and sketch,
+                  nudged toward the sketch (right of the gap's midpoint). */}
+              {i === 2 && (
+                <span
+                  aria-hidden="true"
+                  className="hidden md:flex absolute top-1/2 -translate-y-1/2 right-[490px] w-11 h-11 rounded-full items-center justify-center select-none"
+                  style={{ backgroundColor: FRAG, fontFamily: DISPLAY }}
+                >
+                  <span className="text-xl font-bold leading-none text-white">!!</span>
+                </span>
+              )}
               <div className="shrink-0 px-4 pt-8 pb-6 md:w-[460px] md:border-l md:border-white/10 md:px-8 md:py-8">
                 <img src={SKETCHES[i]} alt="" loading="lazy" className="w-full max-w-[420px] h-auto md:max-w-none" />
               </div>
